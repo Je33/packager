@@ -4,11 +4,24 @@ import type { PackInput } from '$lib/types/pack';
 import { ERROR_MESSAGES, SUCCESS_FEEDBACK_DURATION } from '$lib/utils/constants';
 import { parsePackSize } from '$lib/utils/validation';
 
+// Polyfill for crypto.randomUUID() in non-secure contexts (HTTP)
+function randomUUID(): string {
+	if (crypto.randomUUID) {
+		return crypto.randomUUID();
+	}
+	// Fallback for HTTP contexts
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+		const r = (Math.random() * 16) | 0;
+		const v = c === 'x' ? r : (r & 0x3) | 0x8;
+		return v.toString(16);
+	});
+}
+
 class PackStore {
 	packInputs = $state<PackInput[]>([
-		{ id: crypto.randomUUID(), size: '', saving: false, justSaved: false },
-		{ id: crypto.randomUUID(), size: '', saving: false, justSaved: false },
-		{ id: crypto.randomUUID(), size: '', saving: false, justSaved: false }
+		{ id: randomUUID(), size: '', saving: false, justSaved: false },
+		{ id: randomUUID(), size: '', saving: false, justSaved: false },
+		{ id: randomUUID(), size: '', saving: false, justSaved: false }
 	]);
 
 	calculations = $state<Calculation[]>([]);
@@ -22,7 +35,7 @@ class PackStore {
 
 			if (packs.length > 0) {
 				this.packInputs = packs.map((p) => ({
-					id: crypto.randomUUID(),
+					id: randomUUID(),
 					size: p.Size.toString(),
 					originalSize: p.Size.toString(),
 					packUID: p.UID,
@@ -126,7 +139,7 @@ class PackStore {
 	addPackInput() {
 		this.packInputs = [
 			...this.packInputs,
-			{ id: crypto.randomUUID(), size: '', saving: false, justSaved: false }
+			{ id: randomUUID(), size: '', saving: false, justSaved: false }
 		];
 	}
 
