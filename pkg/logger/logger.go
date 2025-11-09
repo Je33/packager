@@ -31,8 +31,6 @@ func New(config Config) Logger {
 		level = slog.LevelWarn
 	case "error":
 		level = slog.LevelError
-	default:
-		level = slog.LevelInfo
 	}
 
 	return &logger{
