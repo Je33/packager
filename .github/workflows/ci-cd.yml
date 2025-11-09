@@ -10,7 +10,7 @@ on:
 env:
   GO_VERSION: '1.25'
   NODE_VERSION: '20'
-  AWS_REGION: 'us-east-1'
+  AWS_REGION: 'eu-central-1'
 
 jobs:
   # Backend: Lint and Test
