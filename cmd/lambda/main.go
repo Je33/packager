@@ -27,9 +27,15 @@ func main() {
 
 	// Create GraphQL handler
 	h := graphql.NewHandler(pack)
+	
+	// Wrap with logging middleware
+	loggedHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Info("Request received", "method", r.Method, "path", r.URL.Path, "rawPath", r.URL.RawPath)
+		h.ServeHTTP(w, r)
+	})
 
 	// Create Lambda adapter
-	httpLambda := httpadapter.New(h)
+	httpLambda := httpadapter.New(loggedHandler)
 
 	log.Info("Lambda handler initialized")
 
