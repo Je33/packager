@@ -31,7 +31,7 @@
 			value={input.size}
 			oninput={handleSizeChange}
 			placeholder="Enter pack size"
-			class="w-full rounded border px-4 py-2 focus:outline-none focus:ring-1 {hasChanged
+			class="w-full rounded border px-4 py-2 focus:ring-1 focus:outline-none {hasChanged
 				? 'border-amber-400 bg-amber-50 focus:border-amber-500 focus:ring-amber-500'
 				: input.justSaved
 					? 'border-green-400 bg-green-50 focus:border-green-500 focus:ring-green-500'
@@ -40,14 +40,12 @@
 			disabled={input.saving}
 		/>
 		{#if hasChanged}
-			<span
-				class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-medium text-amber-600"
-			>
+			<span class="absolute top-1/2 right-2 -translate-y-1/2 text-xs font-medium text-amber-600">
 				Modified
 			</span>
 		{/if}
 		{#if input.justSaved}
-			<span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-medium text-green-600">
+			<span class="absolute top-1/2 right-2 -translate-y-1/2 text-xs font-medium text-green-600">
 				✓ Saved
 			</span>
 		{/if}

@@ -69,7 +69,7 @@ class PackStore {
 
 	async updatePack(index: number) {
 		const input = this.packInputs[index];
-		
+
 		if (!input.packUID) {
 			return;
 		}

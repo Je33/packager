@@ -61,7 +61,7 @@
 				type="number"
 				bind:value={itemsToOrder}
 				placeholder="263"
-				class="w-64 rounded border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+				class="w-64 rounded border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
 				min="1"
 			/>
 			<button
