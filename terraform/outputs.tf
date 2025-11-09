@@ -10,7 +10,7 @@ output "frontend_bucket_name" {
 
 output "frontend_website_url" {
   description = "S3 website URL for frontend"
-  value       = "http://${aws_s3_bucket.frontend.bucket}.s3-website-${data.aws_region.current.name}.amazonaws.com"
+  value       = "http://${aws_s3_bucket.frontend.bucket}.s3-website.${data.aws_region.current.name}.amazonaws.com"
 }
 
 output "api_endpoint" {
