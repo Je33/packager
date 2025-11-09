@@ -38,6 +38,11 @@ func main() {
 		bodyBytes, _ := io.ReadAll(r.Body)
 		_ = r.Body.Close()
 
+		// Lambda Function URLs send POST as GET with body - fix it
+		if r.Method == "GET" && len(bodyBytes) > 0 {
+			r.Method = "POST"
+		}
+
 		log.Info("Incoming request",
 			"method", r.Method,
 			"path", r.URL.Path,
@@ -51,9 +56,9 @@ func main() {
 	})
 
 	// Create Lambda adapter
-	httpLambda := httpadapter.New(loggedHandler)
+	adapter := httpadapter.New(loggedHandler)
 
 	log.Info("Lambda handler initialized")
 
-	lambda.Start(httpLambda.ProxyWithContext)
+	lambda.Start(adapter.ProxyWithContext)
 }
