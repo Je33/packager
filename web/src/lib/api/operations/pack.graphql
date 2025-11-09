@@ -1,0 +1,45 @@
+query GetPacks($input: PackGetAllRequest!) {
+	packGetAll(input: $input) {
+		packs {
+			UID
+			Size
+		}
+	}
+}
+
+mutation CreatePack($input: PackCreateRequest!) {
+	packCreate(input: $input) {
+		pack {
+			UID
+			Size
+		}
+	}
+}
+
+mutation UpdatePack($input: PackUpdateRequest!) {
+	packUpdate(input: $input) {
+		pack {
+			UID
+			Size
+		}
+	}
+}
+
+mutation DeletePack($input: PackDeleteRequest!) {
+	packDelete(input: $input) {
+		pack {
+			UID
+			Size
+		}
+	}
+}
+
+query CalculatePacks($input: PackCalculateRequest!) {
+	packCalculate(input: $input) {
+		calculations {
+			PackUID
+			PackSize
+			Quantity
+		}
+	}
+}

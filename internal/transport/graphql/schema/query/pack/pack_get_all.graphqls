@@ -1,0 +1,12 @@
+input PackGetAllRequest {
+    page: Int
+    limit: Int
+}
+
+type PackGetAllResponse {
+    packs: [Pack]!
+}
+
+extend type Query {
+    packGetAll(input: PackGetAllRequest!): PackGetAllResponse!
+}

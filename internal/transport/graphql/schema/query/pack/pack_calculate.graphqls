@@ -1,0 +1,11 @@
+input PackCalculateRequest {
+    items: Int!
+}
+
+type PackCalculateResponse {
+    calculations: [Calculation]!
+}
+
+extend type Query {
+    packCalculate(input: PackCalculateRequest!): PackCalculateResponse!
+}

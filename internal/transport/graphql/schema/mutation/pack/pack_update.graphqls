@@ -1,0 +1,12 @@
+input PackUpdateRequest {
+    uid: String!
+    size: Int!
+}
+
+type PackUpdateResponse {
+    pack: Pack!
+}
+
+extend type Mutation {
+    packUpdate(input: PackUpdateRequest!): PackUpdateResponse!
+}

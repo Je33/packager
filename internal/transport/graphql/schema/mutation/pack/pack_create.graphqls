@@ -1,0 +1,11 @@
+input PackCreateRequest {
+    size: Int!
+}
+
+type PackCreateResponse {
+    pack: Pack!
+}
+
+extend type Mutation {
+    packCreate(input: PackCreateRequest!): PackCreateResponse!
+}

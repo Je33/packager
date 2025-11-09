@@ -1,0 +1,11 @@
+""" Calculation of packages and items """
+type Calculation {
+    """ Package identifier """
+    PackUID: String!
+    """ Package capacity """
+    PackSize: Int!
+    """ Amount of packages """
+    Quantity: Int!
+    """ Amount of items to fill """
+    Items: Int!
+}

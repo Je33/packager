@@ -1,0 +1,7 @@
+""" Package type """
+type Pack {
+    """ Package identifier """
+    UID: String!
+    """ Package size """
+    Size: Int!
+}

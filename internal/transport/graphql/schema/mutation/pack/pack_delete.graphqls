@@ -1,0 +1,11 @@
+input PackDeleteRequest {
+    uid: String!
+}
+
+type PackDeleteResponse {
+    pack: Pack!
+}
+
+extend type Mutation {
+    packDelete(input: PackDeleteRequest!): PackDeleteResponse!
+}
