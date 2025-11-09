@@ -57,6 +57,7 @@ func NewHandler(packer resolver.Packer) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.Handle("/query", h)
+	mux.Handle("/", h) // Lambda Function URLs strip the path, so handle root too
 	mux.Handle("/playground", playground.Handler("GraphQL", "/query"))
 
 	// TODO: allow only actual domains

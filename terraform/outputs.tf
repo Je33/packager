@@ -15,5 +15,5 @@ output "frontend_website_url" {
 
 output "api_endpoint" {
   description = "GraphQL API endpoint (for frontend PUBLIC_API_URL)"
-  value       = "${aws_lambda_function_url.api.function_url}query"
+  value       = aws_lambda_function_url.api.function_url
 }
