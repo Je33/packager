@@ -134,7 +134,7 @@ jobs:
       - name: Build frontend
         env:
           # This will be replaced during deployment with actual Lambda URL
-          PUBLIC_API_URL: '__LAMBDA_URL__/query'
+          PUBLIC_API_URL: '__LAMBDA_URL__'
         run: npm run build
 
       - name: Upload artifact
