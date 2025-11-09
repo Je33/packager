@@ -1,11 +1,16 @@
+""" Calculate packages request """
 input PackCalculateRequest {
+    """ Items amount to fill into packages """
     items: Int!
 }
 
+""" Calculated packages response """
 type PackCalculateResponse {
+    """ Calculated packages types and quantity to fill all the items optimally """
     calculations: [Calculation]!
 }
 
 extend type Query {
+    """ Calculate packages """
     packCalculate(input: PackCalculateRequest!): PackCalculateResponse!
 }

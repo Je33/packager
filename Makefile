@@ -1,4 +1,4 @@
-.PHONY: build build-prof build-run gen test test-html bench run lint
+.PHONY: build build-prof build-run gen test test-html bench run lint dc
 
 build:
 	go build -o ./build/api ./cmd/api/main.go
@@ -26,3 +26,6 @@ run:
 
 lint:
 	golangci-lint run
+
+dc:
+	docker-compose up

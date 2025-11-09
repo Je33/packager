@@ -1,11 +1,16 @@
+""" Delete a package type request """
 input PackDeleteRequest {
+    """ Package identifier """
     uid: String!
 }
 
+""" Deleted package type response """
 type PackDeleteResponse {
+    """ Deleted package type """
     pack: Pack!
 }
 
 extend type Mutation {
+    """ Delete a package type """
     packDelete(input: PackDeleteRequest!): PackDeleteResponse!
 }

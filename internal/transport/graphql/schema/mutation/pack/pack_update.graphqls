@@ -1,12 +1,18 @@
+""" Update a package type request """
 input PackUpdateRequest {
+    """ Package type identifier to update """
     uid: String!
+    """ New package size """
     size: Int!
 }
 
+""" Updated package type response """
 type PackUpdateResponse {
+    """ Updated package type """
     pack: Pack!
 }
 
 extend type Mutation {
+    """ Update a package type """
     packUpdate(input: PackUpdateRequest!): PackUpdateResponse!
 }

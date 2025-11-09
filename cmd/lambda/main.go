@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
+	"github.com/awslabs/aws-lambda-go-api-proxy/handlerfunc"
 
 	"github.com/Je33/packager/internal/config"
 	"github.com/Je33/packager/internal/repository/mem"
@@ -45,5 +45,5 @@ func init() {
 }
 
 func main() {
-	lambda.Start(httpadapter.New(handler).ProxyWithContext)
+	lambda.Start(handlerfunc.NewV2(handler.ServeHTTP).ProxyWithContext)
 }

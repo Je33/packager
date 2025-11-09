@@ -1,12 +1,18 @@
+""" Get all package types request """
 input PackGetAllRequest {
+    """ Pagination page """
     page: Int
+    """ Pagination limit """
     limit: Int
 }
 
+""" Get all package types response """
 type PackGetAllResponse {
+    """ Returned package types """
     packs: [Pack]!
 }
 
 extend type Query {
+    """ Get all package types """
     packGetAll(input: PackGetAllRequest!): PackGetAllResponse!
 }

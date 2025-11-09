@@ -1,174 +1,96 @@
-# Pack Calculator - Quick Start Guide
+# Pack Calculator
 
-## Overview
+Calculate optimal package distribution for any order size. Built with Go (GraphQL) and Svelte 5.
 
-A full-stack application for calculating optimal package distribution for orders, built with Go backend (GraphQL) and Svelte 5 frontend.
+**Live Demo:** http://packager-frontend-demo-694226983221.s3-website.eu-central-1.amazonaws.com
 
-## Prerequisites
+## Quick Start
 
-- **Go 1.21+** for backend
-- **Node.js 18+ or Bun** for frontend
-- Make sure ports 8080 (backend) and 5173 (frontend) are available
-
-## Starting the Application
-
-### 1. Start the Backend
-
+**Local:**
 ```bash
-# From project root
-go run ./cmd/main.go
+# Backend (port 8080)
+go run ./cmd/api/main.go
+
+# Frontend (port 5173)
+cd web && bun install && bun run dev
 ```
 
-The GraphQL API will be available at:
-- API endpoint: `http://localhost:8080/query`
-- GraphQL Playground: `http://localhost:8080/playground`
-
-### 2. Start the Frontend
-
+**Docker:**
 ```bash
-# Navigate to web directory
-cd web
-
-# Install dependencies (first time only)
-bun install
-# or: npm install
-
-# Start dev server
-bun run dev
-# or: npm run dev
+make dc
+# or: docker-compose up
 ```
 
-The frontend will be available at: `http://localhost:5173`
+Visit:
+- Local: http://localhost:5173
+- Docker: http://localhost:3000
+- GraphQL API: `/query`
+- Playground: `/playground`
 
-## Using the Application
+## How It Works
 
-### Step 1: Configure Pack Sizes
+Enter pack sizes (e.g., 250, 500, 1000), then calculate any order. The algorithm finds the optimal combination that:
+1. Uses only whole packs
+2. Minimizes total items sent
+3. Minimizes number of packs
 
-1. Enter pack sizes in the input fields (e.g., 250, 500, 1000, 2000, 5000)
-2. Click "Add Pack Size" to add more inputs if needed
-3. Click "Submit pack sizes change" to save
+**Example:** Order 251 items with packs [250, 500, 1000, 2000, 5000]
+→ Result: 1×500 (not 2×250) because 500 total items < 750 total items
 
-### Step 2: Calculate Order
-
-1. Enter the number of items to order (e.g., 263)
-2. Click "Calculate"
-3. View the optimal pack distribution in the results table
-
-### Example Scenarios
-
-**Example 1: Standard packs**
-- Pack sizes: 250, 500, 1000, 2000, 5000
-- Order: 251 items
-- Result: 1 × 500 = 500 items (minimizes total items)
-
-**Example 2: Edge case**
-- Pack sizes: 23, 31, 53
-- Order: 500,000 items
-- Result: 2×23 + 7×31 + 9,429×53 = 500,000 items exactly
-
-## Algorithm Rules
-
-The calculator follows these rules in order of priority:
-
-1. **Only whole packs** can be sent (packs cannot be broken)
-2. **Minimize total items** sent (primary objective)
-3. **Minimize number of packs** (secondary objective)
-
-## Architecture
+## Structure
 
 ```
-packager/
-├── cmd/main.go                     # Backend entry point
-├── internal/
-│   ├── service/packer/             # Core calculation logic
-│   │   ├── packer_calculate.go    # Optimized DP algorithm
-│   │   └── packer_calculate_test.go
-│   ├── repository/mem/             # In-memory storage
-│   └── transport/graphql/          # GraphQL API
-└── web/                            # Svelte frontend
-    └── src/routes/+page.svelte     # Main UI
+cmd/
+├── api/                # Local HTTP server
+└── lambda/             # AWS Lambda handler
+internal/
+├── service/packer/     # packaging algorithm and types management
+├── repository/mem/     # In-memory storage
+└── transport/graphql/  # GraphQL API + schema
+web/                    # Svelte 5 frontend
+├── Dockerfile          # Multi-stage build
+└── nginx.conf          # Production config
+terraform/              # AWS infrastructure
+Dockerfile              # Backend container (distroless)
+docker-compose.yml      # Local development
 ```
 
-## API Endpoints (GraphQL)
+## GraphQL API
 
-### Query: Get All Packs
+All operations are documented in the schema. Use the Playground to explore.
+
+**Common queries:**
 ```graphql
-query {
-  packGetAll(input: {}) {
-    packs {
-      UID
-      Size
-    }
-  }
-}
+# Get all pack sizes
+query { packGetAll(input: {}) { packs { UID Size } } }
+
+# Calculate optimal packs
+query { packCalculate(input: { items: 251 }) { calculations { PackSize Quantity } } }
+
+# Create new pack size
+mutation { packCreate(input: { size: 750 }) { pack { UID Size } } }
 ```
 
-### Mutation: Create Pack
-```graphql
-mutation {
-  packCreate(input: { size: 250 }) {
-    pack {
-      UID
-      Size
-    }
-  }
-}
-```
+## Stack
 
-### Query: Calculate Packs
-```graphql
-query {
-  packCalculate(input: { items: 251 }) {
-    calculations {
-      PackSize
-      Quantity
-    }
-  }
-}
-```
-
-## Performance
-
-The optimized algorithm handles large orders efficiently:
-- **Standard orders (12K items)**: ~82 μs
-- **Edge case (500K items)**: ~12 ms
-- **Memory efficient**: Uses backpointers instead of copying
+- **Backend:** Go 1.23+, GraphQL (gqlgen), AWS Lambda
+- **Frontend:** Svelte 5, TailwindCSS 4, Bun/TypeScript  
+- **Containers:** Docker multi-stage, distroless (backend), nginx (frontend)
+- **Infrastructure:** Terraform, S3, Lambda Function URLs
+- **Algorithm:** Dynamic programming
 
 ## Development
 
-### Running Tests
-
 ```bash
-# Backend tests
-make test
+make test          # Run tests
+make bench         # Run benchmarks
+make lint          # Lint Go code
+make dc            # Run docker-compose
 
-# With benchmarks
-make bench
-```
-
-### Code Quality
-
-```bash
-# Frontend linting
 cd web
-bun run lint
-
-# Format code
-bun run format
+bun run lint       # Lint frontend
+bun run codegen    # Regenerate GraphQL types
 ```
-
-## Technologies Used
-
-**Backend:**
-- Go 1.25+
-- GraphQL (gqlgen)
-- Dynamic Programming algorithm
-
-**Frontend:**
-- Svelte 5 (with runes)
-- SvelteKit
-- Tailwind CSS 4
-- TypeScript
 
 ## License
 

@@ -33,7 +33,7 @@ func New(config *config.GraphQLConfig, packer resolver.Packer, log logger.Logger
 		packer: packer,
 		server: &http.Server{
 			Addr:    ":" + config.Port,
-			Handler: NewHandler(packer),
+			Handler: cors.AllowAll().Handler(NewHandler(packer)),
 			// TODO: add timeouts
 		},
 		log: log,
@@ -58,11 +58,10 @@ func NewHandler(packer resolver.Packer) http.Handler {
 	mux.Handle("/query", h)
 	mux.Handle("/playground", playground.Handler("GraphQL Playground", "/query"))
 
-	// TODO: allow only actual domains
-	return cors.AllowAll().Handler(mux)
+	return mux
 }
 
-func (t *Transport) Start(ctx context.Context) error {
+func (t *Transport) Start(_ context.Context) error {
 	err := t.server.ListenAndServe()
 	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err

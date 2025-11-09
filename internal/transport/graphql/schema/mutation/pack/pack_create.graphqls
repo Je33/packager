@@ -1,11 +1,16 @@
+""" Create a new package type request """
 input PackCreateRequest {
+    """ Package size """
     size: Int!
 }
 
+""" Created package type response """
 type PackCreateResponse {
+    """ Created package type """
     pack: Pack!
 }
 
 extend type Mutation {
+    """ Create a new package type """
     packCreate(input: PackCreateRequest!): PackCreateResponse!
 }

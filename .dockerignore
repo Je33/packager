@@ -1,0 +1,39 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+*.md
+
+# Build artifacts
+build/
+dist/
+*.zip
+
+# Go
+vendor/
+*.test
+*.prof
+cover.out
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform
+terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Web (exclude from backend build)
+web/
+
+# CI/CD
+.github/

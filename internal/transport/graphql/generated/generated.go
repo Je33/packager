@@ -377,61 +377,88 @@ type Pack {
     """ Package size """
     Size: Int!
 }`, BuiltIn: false},
-	{Name: "../schema/mutation/pack/pack_create.graphqls", Input: `input PackCreateRequest {
+	{Name: "../schema/mutation/pack/pack_create.graphqls", Input: `""" Create a new package type request """
+input PackCreateRequest {
+    """ Package size """
     size: Int!
 }
 
+""" Created package type response """
 type PackCreateResponse {
+    """ Created package type """
     pack: Pack!
 }
 
 extend type Mutation {
+    """ Create a new package type """
     packCreate(input: PackCreateRequest!): PackCreateResponse!
 }`, BuiltIn: false},
-	{Name: "../schema/mutation/pack/pack_delete.graphqls", Input: `input PackDeleteRequest {
+	{Name: "../schema/mutation/pack/pack_delete.graphqls", Input: `""" Delete a package type request """
+input PackDeleteRequest {
+    """ Package identifier """
     uid: String!
 }
 
+""" Deleted package type response """
 type PackDeleteResponse {
+    """ Deleted package type """
     pack: Pack!
 }
 
 extend type Mutation {
+    """ Delete a package type """
     packDelete(input: PackDeleteRequest!): PackDeleteResponse!
 }`, BuiltIn: false},
-	{Name: "../schema/mutation/pack/pack_update.graphqls", Input: `input PackUpdateRequest {
+	{Name: "../schema/mutation/pack/pack_update.graphqls", Input: `""" Update a package type request """
+input PackUpdateRequest {
+    """ Package type identifier to update """
     uid: String!
+    """ New package size """
     size: Int!
 }
 
+""" Updated package type response """
 type PackUpdateResponse {
+    """ Updated package type """
     pack: Pack!
 }
 
 extend type Mutation {
+    """ Update a package type """
     packUpdate(input: PackUpdateRequest!): PackUpdateResponse!
 }`, BuiltIn: false},
-	{Name: "../schema/query/pack/pack_calculate.graphqls", Input: `input PackCalculateRequest {
+	{Name: "../schema/query/pack/pack_calculate.graphqls", Input: `""" Calculate packages request """
+input PackCalculateRequest {
+    """ Items amount to fill into packages """
     items: Int!
 }
 
+""" Calculated packages response """
 type PackCalculateResponse {
+    """ Calculated packages types and quantity to fill all the items optimally """
     calculations: [Calculation]!
 }
 
 extend type Query {
+    """ Calculate packages """
     packCalculate(input: PackCalculateRequest!): PackCalculateResponse!
 }`, BuiltIn: false},
-	{Name: "../schema/query/pack/pack_get_all.graphqls", Input: `input PackGetAllRequest {
+	{Name: "../schema/query/pack/pack_get_all.graphqls", Input: `""" Get all package types request """
+input PackGetAllRequest {
+    """ Pagination page """
     page: Int
+    """ Pagination limit """
     limit: Int
 }
 
+""" Get all package types response """
 type PackGetAllResponse {
+    """ Returned package types """
     packs: [Pack]!
 }
 
 extend type Query {
+    """ Get all package types """
     packGetAll(input: PackGetAllRequest!): PackGetAllResponse!
 }`, BuiltIn: false},
 	{Name: "../schema/schema.graphqls", Input: `# GraphQL schema
