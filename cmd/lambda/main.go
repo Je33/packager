@@ -31,22 +31,22 @@ func main() {
 
 	// Create GraphQL handler
 	h := graphql.NewHandler(pack)
-	
+
 	// Wrap with logging middleware to debug request
 	loggedHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Read body for logging
 		bodyBytes, _ := io.ReadAll(r.Body)
-		r.Body.Close()
-		
-		log.Info("Incoming request", 
+		_ = r.Body.Close()
+
+		log.Info("Incoming request",
 			"method", r.Method,
 			"path", r.URL.Path,
 			"content-type", r.Header.Get("Content-Type"),
 			"body", string(bodyBytes))
-		
+
 		// Restore body for handler
 		r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
-		
+
 		h.ServeHTTP(w, r)
 	})
 
