@@ -193,8 +193,11 @@ jobs:
           cd terraform
           # Try to import existing resources (will fail silently if they don't exist)
           terraform import aws_iam_role.lambda_exec packager-lambda-role-demo || true
-          terraform import aws_s3_bucket.frontend packager-frontend-demo-694226983221 || true
           terraform import aws_lambda_function.api packager-api-demo || true
+          terraform import aws_iam_role_policy_attachment.lambda_basic packager-lambda-role-demo/arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole || true
+          terraform import aws_lambda_function_url.api packager-api-demo || true
+          # S3 bucket - try to import or delete if exists
+          terraform import aws_s3_bucket.frontend packager-frontend-demo-694226983221 || aws s3 rb s3://packager-frontend-demo-694226983221 --force || true
         continue-on-error: true
 
       - name: Terraform Plan
