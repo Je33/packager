@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
 
@@ -27,7 +29,7 @@ func main() {
 
 	// Create GraphQL handler
 	h := graphql.NewHandler(pack)
-	
+
 	// Wrap with logging middleware
 	loggedHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Info("Request received", "method", r.Method, "path", r.URL.Path, "rawPath", r.URL.RawPath)
