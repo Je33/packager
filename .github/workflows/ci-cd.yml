@@ -188,6 +188,15 @@ jobs:
           cd terraform
           terraform init
 
+      - name: Import Existing Resources
+        run: |
+          cd terraform
+          # Try to import existing resources (will fail silently if they don't exist)
+          terraform import aws_iam_role.lambda_exec packager-lambda-role-demo || true
+          terraform import aws_s3_bucket.frontend packager-frontend-demo-694226983221 || true
+          terraform import aws_lambda_function.api packager-api-demo || true
+        continue-on-error: true
+
       - name: Terraform Plan
         run: |
           cd terraform
