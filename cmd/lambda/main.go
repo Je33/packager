@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"io"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -15,50 +13,37 @@ import (
 	"github.com/Je33/packager/pkg/logger"
 )
 
-func main() {
+var (
+	// Global variables for execution environment reuse (AWS best practice)
+	log     logger.Logger
+	handler http.Handler
+)
+
+// init runs once during Lambda initialization phase
+func init() {
 	cfg, err := config.Load()
 	if err != nil {
 		panic(err)
 	}
 
-	log := logger.New(logger.Config{
+	log = logger.New(logger.Config{
 		Level: cfg.Log.Level,
 	})
 
-	// Initialize repository and service
+	// Initialize repository and service once
 	repo := mem.New(log)
 	pack := packer.New(repo, log)
 
 	// Create GraphQL handler
 	h := graphql.NewHandler(pack)
 
-	// Wrap with logging middleware to debug request
-	loggedHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Read body for logging
-		bodyBytes, _ := io.ReadAll(r.Body)
-		_ = r.Body.Close()
-
-		// Lambda Function URLs send POST as GET with body - fix it
-		if r.Method == "GET" && len(bodyBytes) > 0 {
-			r.Method = "POST"
-		}
-
-		log.Info("Incoming request",
-			"method", r.Method,
-			"path", r.URL.Path,
-			"content-type", r.Header.Get("Content-Type"),
-			"body", string(bodyBytes))
-
-		// Restore body for handler
-		r.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
-
+	// Wrap with logging middleware
+	handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Info("Request", "method", r.Method, "path", r.URL.Path)
 		h.ServeHTTP(w, r)
 	})
+}
 
-	// Create Lambda adapter
-	adapter := httpadapter.New(loggedHandler)
-
-	log.Info("Lambda handler initialized")
-
-	lambda.Start(adapter.ProxyWithContext)
+func main() {
+	lambda.Start(httpadapter.New(handler).ProxyWithContext)
 }

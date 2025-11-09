@@ -9,6 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/rs/cors"
 	"github.com/vektah/gqlparser/v2/ast"
 
@@ -54,8 +55,8 @@ func NewHandler(packer resolver.Packer) http.Handler {
 	})
 
 	mux := http.NewServeMux()
-
-	mux.Handle("/", h)
+	mux.Handle("/query", h)
+	mux.Handle("/playground", playground.Handler("GraphQL Playground", "/query"))
 
 	// TODO: allow only actual domains
 	return cors.AllowAll().Handler(mux)

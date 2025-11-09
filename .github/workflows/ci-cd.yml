@@ -11,6 +11,7 @@ env:
   GO_VERSION: '1.25'
   NODE_VERSION: '20'
   AWS_REGION: 'eu-central-1'
+  AWS_ACCOUNT_ID: '694226983221'
 
 jobs:
   # Backend: Lint and Test
@@ -197,7 +198,7 @@ jobs:
           terraform import aws_iam_role_policy_attachment.lambda_basic packager-lambda-role-demo/arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole || true
           terraform import aws_lambda_function_url.api packager-api-demo || true
           # S3 bucket - try to import or delete if exists
-          terraform import aws_s3_bucket.frontend packager-frontend-demo-694226983221 || aws s3 rb s3://packager-frontend-demo-694226983221 --force || true
+          terraform import aws_s3_bucket.frontend packager-frontend-demo-${{ env.AWS_ACCOUNT_ID }} || aws s3 rb s3://packager-frontend-demo-${{ env.AWS_ACCOUNT_ID }} --force || true
         continue-on-error: true
 
       - name: Terraform Plan
@@ -230,9 +231,9 @@ jobs:
 
       - name: Update frontend API URL
         run: |
-          # Replace placeholder with actual Lambda URL
-          find web/build -type f -name "*.js" -exec sed -i "s|__LAMBDA_URL__|${{ steps.terraform.outputs.lambda_url }}|g" {} +
-          find web/build -type f -name "*.html" -exec sed -i "s|__LAMBDA_URL__|${{ steps.terraform.outputs.lambda_url }}|g" {} +
+          # Replace placeholder with actual Lambda URL + /query path
+          find web/build -type f -name "*.js" -exec sed -i "s|__LAMBDA_URL__|${{ steps.terraform.outputs.lambda_url }}query|g" {} +
+          find web/build -type f -name "*.html" -exec sed -i "s|__LAMBDA_URL__|${{ steps.terraform.outputs.lambda_url }}query|g" {} +
 
       - name: Deploy frontend to S3
         run: |

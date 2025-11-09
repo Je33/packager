@@ -17,6 +17,15 @@ resource "aws_lambda_function" "api" {
     }
   }
 
+  # Prevent Terraform from replacing Lambda on code changes
+  lifecycle {
+    ignore_changes = [
+      filename,
+      source_code_hash,
+      last_modified
+    ]
+  }
+
   tags = {
     Name        = "${var.project_name}-api"
     Environment = var.environment
